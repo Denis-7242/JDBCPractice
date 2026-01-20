@@ -1,17 +1,18 @@
 # 🎓 JDBC Student Manager
 
-A robust, lightweight console application for managing student records using **Java** and **JDBC**. This project serves as a practical implementation of **CRUD** (Create, Read, Update, Delete) operations with a MySQL database, emphasizing secure configuration practices.
+A robust, modern **Java Swing GUI** application for managing student records using **JDBC**. This project serves as a practical implementation of **CRUD** (Create, Read, Update, Delete) operations with a MySQL database, featuring a dashboard-style interface and secure configuration practices.
 
 ---
 
 ## 🚀 Features
 
+*   **🖥️ Modern GUI**: A clean, dashboard-style interface with a sidebar for data entry and a main view for records.
 *   **🔌 Secure Connection**: Establishes a connection to MySQL using `DriverManager` with credentials loaded from a local configuration file.
-*   **📝 Create**: Insert new student profiles (ID, Name, Course) into the database.
-*   **👀 Read**: Fetch and display a formatted list of all registered students.
-*   **🔄 Update**: Modify existing student details (e.g., changing a major/course).
-*   **❌ Delete**: Remove student records permanently by ID.
-*   **🔒 Security**: Implements `.env` file loading to keep sensitive database passwords out of the source code.
+*   **� Create**: Manually assign Student IDs and add profiles to the database.
+*   **👀 Read**: View all registered students in a styled, scrollable table.
+*   **🔄 Update**: Select records from the table to modify details easily.
+*   **❌ Delete**: Remove student records permanently with confirmation dialogs.
+*   **� Security**: Implements `.env` file loading to keep sensitive database passwords out of the source code.
 
 ---
 
@@ -80,5 +81,7 @@ JDBCPractice/
 ├── .env                 # Database credentials (not committed)
 ├── README.md            # Project documentation
 └── src/
-    └── App.java         # Main application logic
+    ├── App.java         # Main entry point & Database Logic
+    ├── Student.java     # Data Model (POJO)
+    └── StudentFrame.java # GUI Implementation (Swing)
 ```
