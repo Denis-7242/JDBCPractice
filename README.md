@@ -1,6 +1,6 @@
 # 🎓 JDBC Student Manager
 
-A robust, modern **Java Swing GUI** application for managing student records using **JDBC**. This project serves as a practical implementation of **CRUD** (Create, Read, Update, Delete) operations with a MySQL database, featuring a dashboard-style interface and secure configuration practices.
+A simple, modern **Java Swing GUI** application for managing student records using **JDBC**. This project serves as a practical implementation of **CRUD** (Create, Read, Update, Delete) operations with a MySQL database, featuring a dashboard-style interface and secure configuration practices.
 
 ---
 
