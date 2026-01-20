@@ -3,7 +3,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
+import javax.swing.SwingUtilities;
 
 public class App {
 
@@ -31,93 +34,76 @@ public class App {
     }
 
     public static void main(String[] args) {
-        Connection con = connect();
-
-        if (con != null) {
-            System.out.println("Database Connected Successfully\n");
-
-            // 1️⃣ INSERT Operation
-            insertStudent(con, 4, "Alice", "Information Security");
-
-            // 2️⃣ SELECT Operation
-            System.out.println("All Students:");
-            viewStudents(con);
-
-            // 3️⃣ UPDATE Operation
-            updateStudentCourse(con, 1, "Cyber Security");
-
-            // 4️⃣ DELETE Operation
-            deleteStudent(con, 2);
-
-            // Final View
-            System.out.println("\nAfter Update & Delete:");
-            viewStudents(con);
-
-            try { con.close(); } catch (Exception e) {}
-        }
+        SwingUtilities.invokeLater(() -> {
+            new StudentFrame().setVisible(true);
+        });
     }
 
-    // INSERT
-    public static void insertStudent(Connection con, int id, String name, String course) {
-        try {
-            String sql = "INSERT INTO students VALUES (?, ?, ?)";
+    // INSERT (Create)
+    public static void addStudent(int id, String name, String course) {
+        try (Connection con = connect()) {
+            if (con == null) return;
+            String sql = "INSERT INTO students (id, name, course) VALUES (?, ?, ?)";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setInt(1, id);
             ps.setString(2, name);
             ps.setString(3, course);
             ps.executeUpdate();
-            System.out.println("Inserted Student: " + name);
         } catch (Exception e) {
-            System.out.println("Insert Failed");
             e.printStackTrace();
-        }
-    }
-
-    // SELECT
-    public static void viewStudents(Connection con) {
-        try {
-            String sql = "SELECT * FROM students";
-            PreparedStatement ps = con.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                System.out.println(
-                        rs.getInt("id") + " | " +
-                        rs.getString("name") + " | " +
-                        rs.getString("course")
-                );
-            }
-        } catch (Exception e) {
-            System.out.println("Select Failed");
-            e.printStackTrace();
+            javax.swing.JOptionPane.showMessageDialog(null, "Error adding student: " + e.getMessage());
         }
     }
 
     // UPDATE
-    public static void updateStudentCourse(Connection con, int id, String newCourse) {
-        try {
-            String sql = "UPDATE students SET course=? WHERE id=?";
+    public static void updateStudent(int id, String name, String course) {
+        try (Connection con = connect()) {
+            if (con == null) return;
+            String sql = "UPDATE students SET name=?, course=? WHERE id=?";
             PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, newCourse);
-            ps.setInt(2, id);
+            ps.setString(1, name);
+            ps.setString(2, course);
+            ps.setInt(3, id);
             ps.executeUpdate();
-            System.out.println("Updated Student ID: " + id + " to " + newCourse);
         } catch (Exception e) {
-            System.out.println("Update Failed");
             e.printStackTrace();
+            javax.swing.JOptionPane.showMessageDialog(null, "Error updating student: " + e.getMessage());
         }
     }
 
     // DELETE
-    public static void deleteStudent(Connection con, int id) {
-        try {
+    public static void deleteStudent(int id) {
+        try (Connection con = connect()) {
+            if (con == null) return;
             String sql = "DELETE FROM students WHERE id=?";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setInt(1, id);
             ps.executeUpdate();
-            System.out.println("Deleted Student ID: " + id);
         } catch (Exception e) {
-            System.out.println("Delete Failed");
             e.printStackTrace();
+            javax.swing.JOptionPane.showMessageDialog(null, "Error deleting student: " + e.getMessage());
         }
+    }
+
+    // SELECT (Read)
+    public static List<Student> getAllStudents() {
+        List<Student> students = new ArrayList<>();
+        try (Connection con = connect()) {
+            if (con == null) return students;
+            String sql = "SELECT * FROM students";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                students.add(new Student(
+                    rs.getInt("id"),
+                    rs.getString("name"),
+                    rs.getString("course")
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            javax.swing.JOptionPane.showMessageDialog(null, "Error fetching data: " + e.getMessage());
+        }
+        return students;
     }
 }
