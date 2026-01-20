@@ -1,7 +1,9 @@
+import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Properties;
 
 public class App {
 
@@ -9,11 +11,17 @@ public class App {
     public static Connection connect() {
         Connection con = null;
         try {
+            Properties props = new Properties();
+            props.load(new FileInputStream(".env"));
+
+            String user = props.getProperty("DB_USER");
+            String pass = props.getProperty("DB_PASSWORD");
+
             Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/schooldb",
-                    "root", // your MySQL username
-                    "20murithi21" // your MySQL password
+                    user,
+                    pass
             );
         } catch (Exception e) {
             System.out.println("Connection Failed");
